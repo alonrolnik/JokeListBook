@@ -81,7 +81,7 @@ public class AcbWithMenu extends SherlockActivity{
 							boolean success = msg.getData().getBoolean("success");
 							if (success){
 								String res = msg.getData().getString("result");
-								Joke joke = XmlParse.xmlToJoke(res);
+								Joke joke = XmlJokesParser.xmlToJoke(res);
 								//insert new joke to DB
 								mydb = new ManipulateDB(getParent());
 								mydb.open();
