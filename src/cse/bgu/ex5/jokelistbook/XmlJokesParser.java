@@ -14,7 +14,7 @@ public class XmlJokesParser {
     // We don't use namespaces
     private static final String ns = null;
    
-    public List parse(InputStream in) throws XmlPullParserException, IOException {
+    public List<Joke> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -26,10 +26,10 @@ public class XmlJokesParser {
         }
     }
 
-    private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List entries = new ArrayList();
+    private List<Joke> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List <Joke> entries = new ArrayList<Joke>();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
+        parser.require(XmlPullParser.START_TAG, ns, "channel");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -37,7 +37,7 @@ public class XmlJokesParser {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("entry")) {
-                entries.add(readEntry(parser));
+                entries.add(readEntry(parser).entryToJoke());
             } else {
                 skip(parser);
             }
@@ -47,71 +47,73 @@ public class XmlJokesParser {
 
     public static class Entry {
         public final String title;
-        public final String link;
-        public final String summary;
-
-        private Entry(String title, String summary, String link) {
+        public final String content_encoded;
+        public final String pubDate;
+        
+        private Entry(String pubDate, String content_encoded, String title) {
+            this.pubDate = pubDate;
+            this.content_encoded = content_encoded;
             this.title = title;
-            this.summary = summary;
-            this.link = link;
+        }
+        
+        private Joke entryToJoke(){
+        	Joke joke = new Joke();
+        	joke.setAuthor(title);
+        	joke.setDate(pubDate);
+        	joke.setJoke(content_encoded);
+        	joke.setLikes("neither");
+        	return joke;
         }
     }
       
     // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
     // to their respective "read" methods for processing. Otherwise, skips the tag.
     private Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "entry");
+        parser.require(XmlPullParser.START_TAG, ns, "item");
+        String pubDate = null;
+        String content_encoded = null;
         String title = null;
-        String summary = null;
-        String link = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
-            if (name.equals("title")) {
-                title = readTitle(parser);
-            } else if (name.equals("summary")) {
-                summary = readSummary(parser);
-            } else if (name.equals("link")) {
-                link = readLink(parser);
+            if (name.equals("pubDate")) {
+            	pubDate = readpubDate(parser);
+            } else if (name.equals("content_encoded")) {
+            	content_encoded = readcontent_encoded(parser);
+            } else if (name.equals("title")) {
+            	title = readtitle(parser);
             } else {
                 skip(parser);
             }
         }
-        return new Entry(title, summary, link);
+        return new Entry(pubDate, content_encoded, title);
     }
 
     // Processes title tags in the feed.
-    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "title");
-        String title = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "title");
-        return title;
+    private String readcontent_encoded(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "content_encoded");
+        String content_encoded = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "content_encoded");
+        return content_encoded;
     }
       
     // Processes link tags in the feed.
-    private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String link = "";
-        parser.require(XmlPullParser.START_TAG, ns, "link");
-        String tag = parser.getName();
-        String relType = parser.getAttributeValue(null, "rel");  
-        if (tag.equals("link")) {
-            if (relType.equals("alternate")){
-                link = parser.getAttributeValue(null, "href");
-                parser.nextTag();
-            } 
-        }
-        parser.require(XmlPullParser.END_TAG, ns, "link");
-        return link;
+    private String readtitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String title;
+        parser.require(XmlPullParser.START_TAG, ns, "title");
+        title = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "title");
+        return title;
     }
 
-    // Processes summary tags in the feed.
-    private String readSummary(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "summary");
-        String summary = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "summary");
-        return summary;
+    // Processes pubDate tags in the feed.
+    private String readpubDate(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "pubDate");
+        String pubDate = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "pubDate");
+        return pubDate;
     }
 
     // For the tags title and summary, extracts their text values.
@@ -141,9 +143,5 @@ private void skip(XmlPullParser parser) throws XmlPullParserException, IOExcepti
     }
  }
 
-	public static Joke xmlToJoke(String res) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

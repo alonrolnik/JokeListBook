@@ -1,5 +1,7 @@
 package cse.bgu.ex5.jokelistbook;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -74,29 +76,14 @@ public class AcbWithMenu extends SherlockActivity{
 	
 	private void importNewJoke() {
 		// TODO Auto-generated method stub
-		handler = new Handler(){
-						@Override
-						public void handleMessage(Message msg) {
-							dialog.dismiss();
-							boolean success = msg.getData().getBoolean("success");
-							if (success){
-								String res = msg.getData().getString("result");
-								Joke joke = XmlJokesParser.xmlToJoke(res);
-								//insert new joke to DB
-								mydb = new ManipulateDB(getParent());
-								mydb.open();
-								mydb.createJoke(joke);
-								mydb.close();
-								
-							} else {
-							//	tv.setText("RESPONSE:     failed!!!" );
-							}
-						}
-					};
-
 		new Thread(new Runnable() {
 			public void run() {
-				HttpComm.getHttpResponse(handler);
+				try {
+					HttpComm.getHttpResponse(handler, mydb);
+				} catch (XmlPullParserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}).start();
 		
