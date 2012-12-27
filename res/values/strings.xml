@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">JokeListBook</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_jokes_list">JokesList</string>
+    <string name="title_activity_add_new_joke">AddNewJoke</string>
+    <string name="title_activity_view_joke">ViewJoke</string>
+    
+
+</resources>

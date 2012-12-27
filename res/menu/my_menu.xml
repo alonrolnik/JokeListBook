@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/addNewJoke"
+          android:icon="@drawable/add"
+          android:title="add new joke"
+          android:showAsAction="always" />
+    <item android:id="@+id/importNewJoke"
+          android:title="import new joke"
+          android:showAsAction="never" />
+    
+    <item android:id="@+id/changeColor"
+          android:title="ChangeColor"
+          android:showAsAction="never" >
+          <menu>
+              <item android:id="@+id/changeToRed"
+		          android:title="Red"
+		          android:showAsAction="never" />
+              <item android:id="@+id/changeToBlue"
+		          android:title="Blue"
+		          android:showAsAction="never" />
+              <item android:id="@+id/changeToGreen"
+		          android:title="Green"
+		          android:showAsAction="never" />
+          </menu>
+    </item>
+    <item android:id="@+id/exitApp"
+          android:title="ExitApp"
+          android:showAsAction="never" />
+</menu>

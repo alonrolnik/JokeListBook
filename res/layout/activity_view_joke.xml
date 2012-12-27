@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewJoke" >
+
+    <Button
+        android:id="@+id/bLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bDel"
+        android:layout_alignBottom="@+id/bDel"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="21dp"
+        android:text="Like"
+        android:onClick="onButtonClicked" />
+
+    <Button
+        android:id="@+id/bDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bDislike"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Done"
+        android:onClick="onButtonClicked" />
+
+    <Button
+        android:id="@+id/bDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/bDone"
+        android:layout_marginBottom="160dp"
+        android:text="Delete"
+        android:onClick="onButtonClicked" />
+
+    <Button
+        android:id="@+id/bDislike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bDel"
+        android:layout_alignBottom="@+id/bDel"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:text="Dislike"
+        android:onClick="onButtonClicked" />
+
+    <EditText
+        android:id="@+id/etView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/bLike"
+        android:layout_alignParentLeft="true"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>
